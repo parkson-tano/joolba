@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Viewed(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('authentications.User', on_delete=models.CASCADE)
     news = models.ForeignKey('news.NewsModel', on_delete=models.CASCADE)
     viewed = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
@@ -14,7 +14,7 @@ class Viewed(models.Model):
         return self.user.username
     
 class Saved(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('authentications.User', on_delete=models.CASCADE)
     news = models.ForeignKey('news.NewsModel', on_delete=models.CASCADE)
     saved = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)

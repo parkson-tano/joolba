@@ -4,7 +4,7 @@ from django.db import models
 # Create your models here.
 
 class  NewsModel(models.Model):
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    author = models.ForeignKey('settings.AUTH_USER_MODEL', on_delete=models.CASCADE)
     section = models.ForeignKey('sections.SectionModel', on_delete=models.CASCADE)
     category = models.ForeignKey('category.CategoryModel', on_delete=models.CASCADE)
     subcategory = models.ForeignKey('category.SubCategoryModel', on_delete=models.CASCADE)
@@ -29,7 +29,7 @@ class Image(models.Model):
         return self.image.url
     
 class Comment(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('settings.AUTH_USER_MODEL', on_delete=models.CASCADE)
     news = models.ForeignKey(NewsModel, on_delete=models.CASCADE)
     comment = models.TextField()
     deleted = models.BooleanField(default=False)
@@ -40,7 +40,7 @@ class Comment(models.Model):
         return self.comment
     
 class Like(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user = models.ForeignKey('settings.AUTH_USER_MODEL', on_delete=models.CASCADE)
     news = models.ForeignKey(NewsModel, on_delete=models.CASCADE)
     liked = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)

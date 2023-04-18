@@ -41,11 +41,14 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
     'rest_framework_simplejwt.token_blacklist',
     'authentications',
     'news',
     'sections',
     'userprofile',
+    'Blogs',
 ]
 
 MIDDLEWARE = [
@@ -147,8 +150,9 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ],
-
-
+    
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 25
 }
 
 CORS_ALLOW_ALL_ORIGINS = True
@@ -161,3 +165,35 @@ SIMPLE_JWT = {
     'UPDATE_LAST_LOGIN': True,
 
 }
+
+
+ELASTICSEARCH_DSL={
+    'default': {
+        'hosts':'localhost:9200'
+    },
+}
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
+}
+
+DJANGO_ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+    'auto_register': True,
+    'default_index': 'my_index',
+    'default_document': 'Blogs.documents.ArticleDocument',
+}
+
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
+
+
+SEARCH_BACKEND = 'django_elasticsearch_dsl_drf.backends.ElasticsearchDSLSearchBackend'

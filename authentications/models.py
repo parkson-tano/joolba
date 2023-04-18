@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 
 class User(AbstractUser):
 	username = models.CharField(
-            max_length=50, blank=True, null=True, unique=False, default="")
+    max_length=50, blank=True, null=True, unique=False, default="")
 	email = models.EmailField(_('email address'), unique=True)
 	phone_number = models.CharField(max_length=15, null=True, blank=True)
 	created_at = models.DateTimeField(auto_now=False, auto_now_add=True)
