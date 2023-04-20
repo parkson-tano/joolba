@@ -1,4 +1,6 @@
+# package to index and search through articles, categories, and authors.
 from django_elasticsearch_dsl import Document, fields
+# registry of all the Document classes that will be used for indexing and searching.
 from django_elasticsearch_dsl.registries import registry
 from .models import Article, Category, Author
 
@@ -26,7 +28,7 @@ class CategoryDocument(Document):
     class Index:
         name = 'categories'
         settings = {
-            'number_of_shards': 1,
+            'number_of_shards': 1, 
             'number_of_replicas': 0,
         }
 
