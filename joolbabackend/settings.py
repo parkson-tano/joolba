@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'rest_framework.authtoken', 
     'corsheaders',
     'rest_framework_simplejwt',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
     'rest_framework_simplejwt.token_blacklist',
     'drf_spectacular', # for docs
     'drf_spectacular_sidecar',
@@ -54,6 +56,7 @@ INSTALLED_APPS = [
     'news',
     'sections',
     'userprofile',
+    'Blogs',
 ]
 
 MIDDLEWARE = [
@@ -65,9 +68,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_elasticsearch_dsl_drf.middleware.ElasticsearchConnectionErrorMiddleware',
 ]
 
-ROOT_URLCONF = 'joolbabackend.urls'
+ROOT_URLCONF = 'joolbabackend.urls'  
 
 TEMPLATES = [
     {
@@ -197,6 +201,13 @@ SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.MyTokenObtainPairSerializer",
 }
 
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': 'localhost:9200'
+    },
+}
+
+
 
 # email configuration
 
@@ -207,3 +218,4 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') #app password
 EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
+
