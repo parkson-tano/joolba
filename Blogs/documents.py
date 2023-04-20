@@ -60,5 +60,8 @@ class ArticleDocument(Document):
         model = Article
         fields = [
             'id',
+            'title',
+            'content',
+            'category',
         ]
 
