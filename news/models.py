@@ -4,49 +4,43 @@ from django.db import models
 # Create your models here.
 
 class  NewsModel(models.Model):
-    author = models.ForeignKey('authentications.User', on_delete=models.CASCADE)
-    section = models.ForeignKey('sections.SectionModel', on_delete=models.CASCADE)
-    category = models.ForeignKey('sections.CategoryModel', on_delete=models.CASCADE)
-    subcategory = models.ForeignKey('sections.SubCategoryModel', on_delete=models.CASCADE)
+    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    #subcategory = models.ForeignKey('sections.SubCategoryModel', on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    headline = models.TextField()
-    image = models.ImageField(upload_to='news')
-    images = models.JSONField()
     content = models.TextField()
-    view_count = models.IntegerField(default=0)
-    deleted = models.BooleanField(default=False)
+    headline = models.TextField()
+    featured_image = models.ImageField(upload_to='news')
+    other_image = models.ImageField(upload_to='news', blank = True)
+    is_published = models.BooleanField(default = False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    is_deleted = models.BooleanField(default=False)
+    is_draft = models.BooleanField(default= False)
+ 
     
 
     def __str__(self):
         return self.title
     
-class Image(models.Model):
-    image = models.ImageField(upload_to='news')
-
-    def __str__(self):
-        return self.image.url
+    def view_count(self):
+        return View.objects.filter(article=self).count()
+  
     
 class Comment(models.Model):
-    user = models.ForeignKey('authentications.User', on_delete=models.CASCADE)
-    news = models.ForeignKey(NewsModel, on_delete=models.CASCADE)
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    article = models.ForeignKey(NewsModel, on_delete=models.CASCADE)
     comment = models.TextField()
     deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    liked = models.BooleanField( default= False)
 
     def __str__(self):
-        return self.comment
+        return f'{self.user.username} on {self.article.title}'
     
-class Like(models.Model):
-    user = models.ForeignKey('authentications.User', on_delete=models.CASCADE)
-    news = models.ForeignKey(NewsModel, on_delete=models.CASCADE)
-    liked = models.BooleanField(default=False)
-    deleted = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+class View(models.Model):
+    article = models.ForeignKey(NewsModel, related_name = 'views', on_delete=models.CASCADE)
+    view_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.user.username
-    
+        return f'{self.article.title} on {self.view_date}'
