@@ -8,7 +8,7 @@ db.sqlite3-journal
 media
 venv/
 .env
-
+.venv
 
 # Created by https://www.gitignore.io
 
