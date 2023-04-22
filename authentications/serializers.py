@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .validators import email_validator
-
+from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+User = get_user_model()
 
 # customize token claim
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -19,7 +20,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-User = get_user_model()
 
 class UserSerializer(serializers.ModelSerializer):
 
@@ -67,3 +67,40 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
+
+class ForgotPasswordSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField()
+
+    class Meta:
+        model = User
+        fields = ('email',)
+
+
+    def validate_email(self, value):
+        email_validator(value)
+        try:
+            user = User.objects.get(email=value, is_active=True)
+        except User.DoesNotExist:
+            raise ValidationError('No active account found with the given email address')
+        
+        return value
+
+
+class ResetPassWordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField()
+    confirm_password = serializers.CharField()
+
+    class Meta:
+        model = User
+        fields = ('password', 'confirm_password',)
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        confirm_password = attrs.pop('confirm_password')
+
+        if password != confirm_password:
+            raise serializers.ValidationError('passowrds does not match')
+        
+
+        return attrs
