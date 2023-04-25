@@ -40,30 +40,30 @@ class CategoryDocument(Document):
         ]
         
         
-@registry.register_document
-class ArticleDocument(Document):
-    title = fields.TextField()
-    content = fields.TextField()
-    category = fields.ObjectField(properties={
-        'name': fields.TextField()
-    })
-    author = fields.ObjectField(properties={
-        'name': fields.TextField()
-    })
+# @registry.register_document
+# class ArticleDocument(Document):
+#     # article_title = fields.TextField()
+#     content = fields.TextField()
+#     category = fields.ObjectField(properties={
+#         'name': fields.TextField()
+#     })
+#     author = fields.ObjectField(properties={
+#         'name': fields.TextField()
+#     })
 
-    class Index:
-        name = 'articles'
-        settings = {
-            'number_of_shards': 1,
-            'number_of_replicas': 0
-        }
+#     class Index:
+#         name = 'articles'
+#         settings = {
+#             'number_of_shards': 1,
+#             'number_of_replicas': 0
+#         }
 
-    class Django:
-        model = Article
-        fields = [
-            'id',
-            'title',
-            'content',
-            'category',
-        ]
+#     class Django:
+#         model = Article
+#         fields = [
+#             'id',
+#             # 'article_title',
+#             'content',
+#             'category',
+#         ]
 
