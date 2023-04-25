@@ -48,13 +48,13 @@ class NewsDetail(viewsets.ViewSet):
         serializer = NewsSerializer(details)
         return Response(serializer.data)
 
-    def update(self, request, pk=None):
+    def update(self, request, pk=None, *args, **kwargs):
         details = self.get_news_object(pk)
         if details is None:
             return Response({'error': 'Article not found'}, status = status.HTTP_404_NOT_FOUND)
         serializer = NewsSerializer(details, data = request.data)
         if serializer.is_valid():
-            if details.user.id == request.user.id:
+            if details.author.id == request.user.id:
                 serializer.save()
                 return Response(serializer.data,status = status.HTTP_200_OK)
             return Response({"error": "You are not authorized to edit this article"},  status = 401)
