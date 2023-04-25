@@ -1,10 +1,11 @@
 from django.db import models
-
+from django.conf import settings
+User = settings.AUTH_USER_MODEL
 
 # Create your models here.
 
 class  NewsModel(models.Model):
-    author = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     #subcategory = models.ForeignKey('sections.SubCategoryModel', on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.TextField()
@@ -26,7 +27,7 @@ class  NewsModel(models.Model):
   
     
 class Comment(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(NewsModel, on_delete=models.CASCADE)
     comment = models.TextField()
     deleted = models.BooleanField(default=False)
