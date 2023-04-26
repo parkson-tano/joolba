@@ -1,4 +1,6 @@
 from django.db import models
+from django.conf import settings
+User= settings.AUTH_USER_MODEL
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -7,17 +9,11 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-class Author(models.Model):
-    name = models.CharField(max_length=100)
-
-    def __str__(self):
-        return self.name
-
 class Article(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     created_datetime = models.DateTimeField(auto_now_add=True)
     updated_datetime = models.DateTimeField(auto_now=True)
     

@@ -5,17 +5,13 @@ from django_elasticsearch_dsl_drf.filter_backends import (
     OrderingFilterBackend,
 )
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
-from .models import Category, Author, Article
-from .serializers import CategorySerializer, AuthorSerializer, ArticleSerializer
+from .models import Category, Article
+from .serializers import CategorySerializer, ArticleSerializer
 from .documents import ArticleDocument
 
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
-class AuthorViewSet(viewsets.ModelViewSet):
-    queryset = Author.objects.all()
-    serializer_class = AuthorSerializer
 
 class ArticleViewSet(DocumentViewSet):
     document = ArticleDocument
