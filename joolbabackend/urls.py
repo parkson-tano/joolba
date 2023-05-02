@@ -18,8 +18,9 @@ urlpatterns = [
     path('', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
     path('api/docs/', SpectacularRedocView.as_view(url_name='schema'), name='redoc'),
     
-    # for blogs
-    path('blogs/', include('Blogs.urls')),
+    # for search through articles
+    path('Blogs/', include('Blogs.urls')),
+    path('Search/', include('Search.urls')),
 
 ]
 

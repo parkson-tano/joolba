@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from django_elasticsearch_dsl_drf.filter_backends import (
     FilteringFilterBackend,
-    SearchFilterBackend,
+    CompoundSearchFilterBackend,
     OrderingFilterBackend,
 )
 from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
@@ -18,7 +18,7 @@ class ArticleViewSet(DocumentViewSet):
     serializer_class = ArticleSerializer
     filter_backends = [
         FilteringFilterBackend,
-        SearchFilterBackend,
+        CompoundSearchFilterBackend,
         OrderingFilterBackend,
     ]
     search_fields = (
