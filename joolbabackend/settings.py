@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'news',
     'sections',
     'Blogs',
-    'Search',
+    'search',
     'userprofile',
 ]
 
