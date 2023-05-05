@@ -20,7 +20,7 @@ urlpatterns = [
     
     # for search through articles
     path('Blogs/', include('Blogs.urls')),
-    path('Search/', include('Search.urls')),
+    path('search/', include('search.urls')),
 
 ]
 
