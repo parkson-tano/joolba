@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.tokens import default_token_generator, PasswordResetTokenGenerator
 from django.urls import reverse
 from joolbabackend.settings import EMAIL_HOST_USER
 from rest_framework.authtoken.models import Token
@@ -24,11 +24,30 @@ def send_verification_mail(current_site, user):
     send_mail(subject, message, from_email, recipient_list)
 
 
-# create token for users on sign up
-def create_token_for_user(user):
-    try:
-        token = Token.objects.create(user=user)
-    except IntegrityError:
-        token = Token.objects.get(user=user)
 
-    return token
+
+def send_password_reset_token(current_site, user):
+    token_generator = PasswordResetTokenGenerator()
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    url_token = token_generator.make_token(user)
+
+    # Remember to replace the current site with settings.FRONTEND_URL
+    password_reset_url = reverse('password_reset', kwargs={'uuidb64':uid, 'url_token':url_token})
+    password_reset_link = f'http://{current_site}{password_reset_url}'
+    subject = 'Password reset for your joolba account'
+    message = f'Dear {user.name}, \n\nYour request to change your password is being processed, Kindly click on this url, you will be redirected to a page where you can change your password: \n\n{password_reset_link}\n\nNote that this link expires and you will not be able to use it to change your password once it expires. If you did not request for a password reset, kindly ignore this mail.\n\nThank you for choosing Joolba as your trusted news source. We look forward to keeping you informed on the latest news and event\n\nBest regards,\n\nThe Joolba Team.'
+    from_email = EMAIL_HOST_USER
+    recipient_list = [user.email]
+    send_mail(subject, message, from_email, recipient_list)
+
+
+
+
+# i didn't used it again, just kept it there for incasity
+# def create_token_for_user(user):
+#     try:
+#         token = Token.objects.create(user=user)
+#     except IntegrityError:
+#         token = Token.objects.get(user=user)
+
+#     return token
