@@ -8,7 +8,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_decode
 from rest_framework.generics import CreateAPIView, views
 from rest_framework.response import Response
-from .utils import send_verification_mail, send_password_reset_token
+from .utils import send_verification_mail, send_password_reset_token, send_congratulations_mail
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import AllowAny
 
@@ -18,7 +18,14 @@ User = get_user_model()
 
 class AccountVerification(views.APIView):
     permission_classes = [AllowAny]
-    def get(self, request):
+    def get(self, request, uuidb64, token, *args, **kwargs):
+
+        # decode the user's id so we can retrieve the user
+        uid = force_str(urlsafe_base64_decode(uuidb64))
+        user = User.objects.get(pk=uid)
+        current_site = request.get_host()
+
+        send_congratulations_mail(user, current_site)
         return Response({'message': 'Account verified!'})
 
 

@@ -7,23 +7,77 @@ from joolbabackend.settings import EMAIL_HOST_USER
 from rest_framework.authtoken.models import Token
 from django.db import IntegrityError
 
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+
+
 
 # this is file contains functions i might need 
 
 # send verification mail
 
+# def send_verification_mail(current_site, user):
+#     uid = urlsafe_base64_encode(force_bytes(user.pk))
+#     verification_token = default_token_generator.make_token(user)
+#     verification_link = reverse('account_verification', kwargs={'uuidb64':uid, 'token':verification_token})
+#     verification_url = f'http://{current_site}{verification_link}'
+#     subject = 'Confirm your email address for Joolba Account'
+#     message = f'Dear {user.name}, \n\nThank you for creating an account with Joolba, your go-to source for the latest news and updates. To access our premium content and stay up to date on breaking news, please verify your email address by clicking on the link below: \n\n{verification_url}\n\nIf you did not create an account with Joolba, please ignore this email. Your account will not be actiavted until you verify your email address\n\nThank you for choosing Joolba as your trusted news source. We look forward to keeping you informed on the latest news and event\n\nBest regards,\n\nThe Joolba Team.'
+#     from_email = EMAIL_HOST_USER
+#     recipient_list = [user.email]
+#     send_mail(subject, message, from_email, recipient_list)
+
 def send_verification_mail(current_site, user):
+
+
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     verification_token = default_token_generator.make_token(user)
     verification_link = reverse('account_verification', kwargs={'uuidb64':uid, 'token':verification_token})
     verification_url = f'http://{current_site}{verification_link}'
     subject = 'Confirm your email address for Joolba Account'
-    message = f'Dear {user.name}, \n\nThank you for creating an account with Joolba, your go-to source for the latest news and updates. To access our premium content and stay up to date on breaking news, please verify your email address by clicking on the link below: \n\n{verification_url}\n\nIf you did not create an account with Joolba, please ignore this email. Your account will not be actiavted until you verify your email address\n\nThank you for choosing Joolba as your trusted news source. We look forward to keeping you informed on the latest news and event\n\nBest regards,\n\nThe Joolba Team.'
+
+    email_body = render_to_string('authentications/verify_account.html', {
+        'username': user.name,
+        'verification_url': verification_url,
+    })
+
     from_email = EMAIL_HOST_USER
-    recipient_list = [user.email]
-    send_mail(subject, message, from_email, recipient_list)
+    recipient = user.email
 
 
+    email = EmailMessage(
+        subject=subject,
+        body=email_body,
+        from_email = EMAIL_HOST_USER,
+        to = [recipient],
+        reply_to=[from_email],
+    )
+    
+    email.content_subtype = 'html'
+    
+    # Send the email
+    email.send()
+
+def send_congratulations_mail(user, site_domain):
+    login_link = reverse('token_obtain_pair')
+    login_url = f'http://{site_domain}{login_link}'
+    email_body = render_to_string('authentications/congratulations.html', {
+        'login_url':login_url
+    })
+
+    from_email = EMAIL_HOST_USER
+    recipient = user.email
+    email = EmailMessage(
+        subject="Congratulations! Your Joolba account has been verified successfully",
+        body=email_body,
+        from_email = EMAIL_HOST_USER,
+        to = [recipient],
+        reply_to=[from_email],
+    )
+    
+    email.content_subtype = 'html'
+    
+    email.send()
 
 
 def send_password_reset_token(current_site, user):
