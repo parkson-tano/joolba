@@ -37,7 +37,4 @@ class ArticleViewSet(DocumentViewSet):
     
     
     
-    
-#  pip install django-elasticsearch-dsl django-elasticsearch-dsl-drf elasticsearch elasticsearch-dsl    
-
-
+   
